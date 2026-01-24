@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product</title>
+</head>
+<body>
+<h2>Edit Product</h2>
+
+<form action="/update/<%= product.id %>" method="POST">
+    Name: <input type="text" name="name" value="<%= product.name %>"><br>
+    Price: <input type="number" name="price" value="<%= product.price %>"><br>
+    Quantity: <input type="number" name="quantity" value="<%= product.quantity %>"><br>
+    <button type="submit">Save</button>
+</form>
+
+<a href="/">Back</a>
+
+</body>
+</html>

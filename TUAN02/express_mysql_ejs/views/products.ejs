@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Product List</title>
+</head>
+<body>
+<h2>Add Product</h2>
+<form action="/add" method="post">
+    Name: <input name="name"><br>
+    Price: <input name="price"><br>
+    Quantity: <input name="quantity"><br>
+    <button>Add</button>
+</form>
+
+<h2>Products</h2>
+<table border="1">
+    <tr>
+        <th>ID</th><th>Name</th><th>Price</th><th>Quantity</th><th>Actions</th>
+    </tr>
+    <% products.forEach(p => { %>
+        <tr>
+            <td><%= p.id %></td>
+            <td><%= p.name %></td>
+            <td><%= p.price %></td>
+            <td><%= p.quantity %></td>
+            <td>
+                <a href="/edit/<%= p.id %>">Edit</a> |
+                <a href="/delete/<%= p.id %>" onclick="return confirm('Delete?')">Delete</a>
+            </td>
+        </tr>
+    <% }) %>
+</table>
+</body>
+</html>

@@ -1,0 +1,3 @@
+Node.js is awesome
+I am learning fs and lodash
+This is an example log file
