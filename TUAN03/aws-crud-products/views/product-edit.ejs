@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #eef1f5;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: auto;
+            background: #fff;
+            padding: 35px 40px;
+            border-radius: 14px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            animation: fadeIn .25s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: #2b2d42;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #d2d6db;
+            background: #fafafa;
+            font-size: 15px;
+            transition: all .2s ease;
+        }
+
+        input:focus {
+            border-color: #4f7cff;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79,124,255,0.2);
+        }
+
+        .image-preview {
+            width: 160px;
+            height: 160px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+        }
+
+        .no-image {
+            width: 160px;
+            height: 160px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border:2px dashed #ccc;
+            border-radius:10px;
+            color:#777;
+            background:#fafafa;
+            font-size:15px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 26px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            border: none;
+            transition: background .2s ease, transform .2s ease;
+        }
+
+        .btn-primary {
+            background: #4f7cff;
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #3f69d3;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #d6d6d6;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .btn-secondary:hover {
+            background: #c4c4c4;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Edit Product</h1>
+
+    <form action="/products/edit" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="<%= product.id %>">
+        <input type="hidden" name="oldImage" value="<%= product.url_image %>">
+
+        <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" name="name" value="<%= product.name %>" required>
+        </div>
+
+        <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" name="price" value="<%= product.price %>" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" name="quantity" value="<%= product.quantity %>" min="0" required>
+        </div>
+
+        <div class="form-group">
+            <label>Current Image</label>
+            <% if (product.url_image) { %>
+                <img src="<%= product.url_image %>" class="image-preview">
+            <% } else { %>
+                <div class="no-image">No image</div>
+            <% } %>
+        </div>
+
+        <div class="form-group">
+            <label>Change Image (optional)</label>
+            <input type="file" name="image" accept="image/*">
+        </div>
+
+        <div class="buttons">
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="/products" class="btn btn-secondary" style="text-align:center; padding-top:12px;">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

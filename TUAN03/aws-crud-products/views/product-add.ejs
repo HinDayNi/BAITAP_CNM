@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || "Add Product" %></title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef3f8;
+            margin: 40px;
+        }
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: white;
+            padding: 32px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1b4b8a;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #1b1b1b;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cfd7e3;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #1b4b8a;
+            outline: none;
+            box-shadow: 0 0 5px rgba(27, 75, 138, 0.3);
+        }
+        .file-upload {
+            position: relative;
+            width: 100%;
+        }
+        .file-upload input[type=file] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-upload-label {
+            padding: 12px;
+            border: 1.5px dashed #cfd7e3;
+            border-radius: 4px;
+            text-align: center;
+            background: #f8fbff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .file-upload-label:hover {
+            border-color: #1b4b8a;
+            background: #edf4ff;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 28px;
+        }
+        .btn {
+            flex: 1;
+            padding: 10px 0;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background-color: #1b4b8a;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #163f75;
+        }
+        .btn-secondary {
+            background-color: #6d7d8c;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #596775;
+        }
+        .error {
+            background: #ffe5e8;
+            border: 1px solid #ffccd2;
+            color: #b30015;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Add Product</h1>
+
+    <% if (typeof error !== 'undefined') { %>
+        <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/products/product-add" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input id="name" name="name" type="text" required placeholder="Enter product name">
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price ($)</label>
+            <input id="price" name="price" type="number" step="0.01" min="0" required placeholder="0.00">
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="0" required placeholder="Enter quantity">
+        </div>
+
+        <div class="form-group">
+            <label for="image">Product Image</label>
+            <div class="file-upload">
+                <input id="image" name="image" type="file" accept="image/*" required>
+                <label class="file-upload-label" id="file-label">
+                    Select product image<br><small>(JPG, PNG, GIF)</small>
+                </label>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button type="submit" class="btn btn-primary">Add</button>
+            <a href="/products" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('image').addEventListener('change', function (e) {
+        const lbl = document.getElementById('file-label');
+        lbl.textContent = e.target.files.length ? e.target.files[0].name : "Select product image";
+    });
+</script>
+
+</body>
+</html>
