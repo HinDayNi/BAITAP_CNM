@@ -1,23 +1,23 @@
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var upload = multer();
+import express from 'express';
+const router = express.Router();
+import multer from 'multer';
+const upload = multer();
 
-var { DynamoDBClient, CreateTableCommand, DescribeTableCommand } = require("@aws-sdk/client-dynamodb");
-var { DynamoDBDocumentClient, ScanCommand, PutCommand, UpdateCommand, DeleteCommand } = require("@aws-sdk/lib-dynamodb");
-var { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
-var { v4: uuidv4 } = require('uuid');
+import { DynamoDBClient, CreateTableCommand, DescribeTableCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand, PutCommand, UpdateCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from 'uuid';
 
-var ddbClient = new DynamoDBClient({
+const ddbClient = new DynamoDBClient({
     region: process.env.AWS_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
     }
 });
-var ddb = DynamoDBDocumentClient.from(ddbClient);
+const ddb = DynamoDBDocumentClient.from(ddbClient);
 
-var s3 = new S3Client({
+const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -191,4 +191,4 @@ router.get('/delete/:id', async function(req, res) {
     }
 });
 
-module.exports = router;
+export default router;
