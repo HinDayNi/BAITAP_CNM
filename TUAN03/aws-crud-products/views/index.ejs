@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title || "Product Management" %></title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #eef3f8;
+    }
+    h1 {
+      color: #1b4b8a;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .add-btn {
+      background-color: #1b4b8a;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      display: inline-block;
+      font-size: 14px;
+    }
+    .add-btn:hover {
+      background-color: #163f75;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #d9e2ec;
+      text-align: left;
+      font-size: 14px;
+    }
+    th {
+      background-color: #d0e2ff;
+      color: #1b4b8a;
+      font-weight: bold;
+    }
+    tr:hover {
+      background-color: #f1f6ff;
+    }
+    .actions a {
+      margin-right: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      color: #1b4b8a;
+    }
+    .actions a:hover {
+      text-decoration: underline;
+    }
+    .delete-link {
+      color: #cc0000 !important;
+    }
+    .no-products {
+      padding: 40px;
+      background: white;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 16px;
+      color: #444;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #666;
+      font-size: 13px;
+    }
+    .product-image {
+      border-radius: 4px;
+      object-fit: cover;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+    .product-image:hover {
+      transform: scale(1.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    .no-image {
+      width: 60px;
+      height: 60px;
+      background-color: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      color: #6c757d;
+      font-size: 12px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Product Management</h1>
+
+<div style="text-align: center; margin-bottom: 30px;">
+  <a href="/products/product-add" class="add-btn">Add Product</a>
+</div>
+
+<% if (products && products.length > 0) { %>
+  <table>
+    <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Image</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% products.forEach(p => { %>
+      <tr>
+        <td><%= p.name %></td>
+        <td>
+          <% if (p.url_image) { %>
+            <img src="<%= p.url_image %>" width="60" height="60" class="product-image" alt="<%= p.name %>">
+          <% } else { %>
+            <div class="no-image">No Image</div>
+          <% } %>
+        </td>
+        <td><%= parseFloat(p.price).toFixed(2) %>$</td>
+        <td><%= p.quantity %></td>
+        <td class="actions">
+          <a href="/products/edit/<%= p.id %>">Edit</a>
+          <a href="/products/delete/<%= p.id %>" class="delete-link"
+             onclick="return confirm('Delete this product?')">
+            Delete
+          </a>
+        </td>
+      </tr>
+    <% }) %>
+    </tbody>
+  </table>
+<% } else { %>
+  <div class="no-products">
+    No products found. Please add new products.
+  </div>
+<% } %>
+
+</body>
+</html>
