@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Category</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #eef3f8;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #1b4b8a;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align:center;">Edit Category</h1>
+    <form action="/categories/edit" method="POST">
+        <input type="hidden" name="categoryId" value="<%= category.categoryId %>">
+
+        <label>Name</label>
+        <input type="text" name="name" value="<%= category.name %>" required>
+
+        <label>Description</label>
+        <textarea name="description" rows="3"><%= category.description %></textarea>
+
+        <button type="submit">Update</button>
+        <div style="text-align:center; margin-top:10px;"><a href="/categories">Cancel</a></div>
+    </form>
+</body>
+
+</html>

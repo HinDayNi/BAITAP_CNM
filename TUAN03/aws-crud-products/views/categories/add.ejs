@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Category</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #eef3f8;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #1b4b8a;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align:center;">Add Category</h1>
+    <form action="/categories/add" method="POST">
+        <label>Name</label>
+        <input type="text" name="name" required>
+
+        <label>Description</label>
+        <textarea name="description" rows="3"></textarea>
+
+        <button type="submit">Create</button>
+        <div style="text-align:center; margin-top:10px;"><a href="/categories">Cancel</a></div>
+    </form>
+</body>
+
+</html>

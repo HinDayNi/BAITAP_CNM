@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title || "Product Management" %>
+    </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #eef3f8;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #1b4b8a;
+            margin: 0;
+        }
+
+        .nav a {
+            margin-left: 15px;
+            color: #1b4b8a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .filters {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filters .group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filters label {
+            font-size: 12px;
+            margin-bottom: 4px;
+            color: #666;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .filters button {
+            padding: 6px 15px;
+            background: #1b4b8a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-btn {
+            background-color: #1b4b8a;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #d9e2ec;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #d0e2ff;
+            color: #1b4b8a;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f1f6ff;
+        }
+
+        .actions a {
+            margin-right: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            color: #1b4b8a;
+        }
+
+        .delete-link {
+            color: #cc0000 !important;
+        }
+
+        .product-image {
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: white;
+        }
+
+        .status-In-Stock {
+            background-color: #28a745;
+        }
+
+        .status-Low-Stock {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .status-Out-of-Stock {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Product Management</h1>
+        <div class="nav">
+            <span>Welcome, <%= user.username %> (<%= user.role %>)</span>
+            <a href="/categories">Manage Categories</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <form class="filters" action="/products" method="GET">
+        <div class="group">
+            <label>Name</label>
+            <input type="text" name="name" value="<%= filters.name || '' %>">
+        </div>
+        <div class="group">
+            <label>Category</label>
+            <select name="categoryId">
+                <option value="">All Categories</option>
+                <% categories.forEach(c=> { %>
+                    <option value="<%= c.categoryId %>" <%=filters.categoryId===c.categoryId ? 'selected' : '' %>><%=
+                            c.name %>
+                    </option>
+                    <% }) %>
+            </select>
+        </div>
+        <div class="group">
+            <label>Min Price</label>
+            <input type="number" name="minPrice" value="<%= filters.minPrice || '' %>" style="width: 80px;">
+        </div>
+        <div class="group">
+            <label>Max Price</label>
+            <input type="number" name="maxPrice" value="<%= filters.maxPrice || '' %>" style="width: 80px;">
+        </div>
+        <div class="group">
+            <label>&nbsp;</label>
+            <button type="submit">Filter</button>
+        </div>
+        <div class="group">
+            <label>&nbsp;</label>
+            <a href="/products" style="font-size: 12px; color: #666; padding: 6px;">Clear</a>
+        </div>
+    </form>
+
+    <% if (user.role==='admin' ) { %>
+        <div style="margin-bottom: 20px;">
+            <a href="/products/add" class="add-btn">Add Product</a>
+        </div>
+        <% } %>
+
+            <% if (products && products.length> 0) { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <% if (user.role==='admin' ) { %>
+                                <th>Actions</th>
+                                <% } %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% products.forEach(p=> { %>
+                            <tr>
+                                <td>
+                                    <%= p.name %>
+                                </td>
+                                <td>
+                                    <% const cat=categories.find(c=> c.categoryId === p.categoryId); %>
+                                        <%= cat ? cat.name : 'Unknown' %>
+                                </td>
+                                <td>
+                                    <% if (p.url_image) { %>
+                                        <img src="<%= p.url_image %>" width="60" height="60" class="product-image"
+                                            alt="<%= p.name %>">
+                                        <% } else { %>
+                                            No Image
+                                            <% } %>
+                                </td>
+                                <td>
+                                    <%= parseFloat(p.price).toLocaleString('vi-VN') %> VNĐ
+                                </td>
+                                <td>
+                                    <%= p.quantity %>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-<%= p.inventoryStatus.replace(/ /g, '-') %>">
+                                        <%= p.inventoryStatus %>
+                                    </span>
+                                </td>
+                                <% if (user.role==='admin' ) { %>
+                                    <td class="actions">
+                                        <a href="/products/edit/<%= p.id %>">Edit</a>
+                                        <a href="/products/delete/<%= p.id %>" class="delete-link"
+                                            onclick="return confirm('Delete this product?')">
+                                            Delete
+                                        </a>
+                                    </td>
+                                    <% } %>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+                <% } else { %>
+                    <div style="text-align:center; padding: 40px; background:white;">No products found.</div>
+                    <% } %>
+
+                        <% if (typeof totalPages !=='undefined' && totalPages> 1) { %>
+                            <div style="margin-top: 20px; text-align: center;">
+                                <% let queryParams='' ; if (typeof filters !=='undefined' ) { if (filters.name)
+                                    queryParams +='&name=' + filters.name; if (filters.categoryId) queryParams
+                                    +='&categoryId=' + filters.categoryId; if (filters.minPrice) queryParams
+                                    +='&minPrice=' + filters.minPrice; if (filters.maxPrice) queryParams +='&maxPrice='
+                                    + filters.maxPrice; } %>
+
+                                    <% if (currentPage> 1) { %>
+                                        <a href="/products?page=<%= currentPage - 1 %><%= queryParams %>"
+                                            style="margin-right: 10px;">&laquo; Prev</a>
+                                        <% } %>
+
+                                            <% for(let i=1; i <=totalPages; i++) { %>
+                                                <a href="/products?page=<%= i %><%= queryParams %>"
+                                                    style="margin: 0 5px; <%= currentPage === i ? 'font-weight:bold; text-decoration:underline;' : '' %>">
+                                                    <%= i %>
+                                                </a>
+                                                <% } %>
+
+                                                    <% if (currentPage < totalPages) { %>
+                                                        <a href="/products?page=<%= currentPage + 1 %><%= queryParams %>"
+                                                            style="margin-left: 10px;">Next &raquo;</a>
+                                                        <% } %>
+                            </div>
+                            <% } %>
+
+</body>
+
+</html>
