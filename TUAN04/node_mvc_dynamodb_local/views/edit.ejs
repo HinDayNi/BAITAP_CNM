@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Edit Product</h1>
+            <a href="/" style="color: var(--text-muted); text-decoration: none;">&larr; Back to Home</a>
+        </header>
+
+        <div class="grid" style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
+            <section class="card">
+                <form action="/update" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="old_image" value="<%= product.url_image %>">
+                    <div class="form-group">
+                        <label for="id">Product ID (Cannot Change)</label>
+                        <input type="text" id="id" name="id" value="<%= product.id %>" readonly
+                            style="opacity: 0.7; cursor: not-allowed;">
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" name="name" value="<%= product.name %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price ($)</label>
+                        <input type="number" id="price" name="price" value="<%= product.price %>" required min="0"
+                            step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Change Image (Leave empty to keep current)</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <div style="margin-top: 0.5rem;">
+                            <small style="color: var(--text-muted);">Current Image:</small><br>
+                            <img src="<%= product.url_image %>" alt="Current"
+                                style="height: 50px; border-radius: 4px; margin-top: 0.25rem;">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Update Product</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>

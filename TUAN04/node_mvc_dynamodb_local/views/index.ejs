@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Products List</h1>
+        </header>
+
+        <div class="actions" style="margin-bottom: 2rem; text-align: right;">
+            <a href="/add" class="btn" style="width: auto;">Add New Product</a>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 1fr;">
+            <section class="card">
+                <h2>Product List</h2>
+                <% if (products && products.length> 0) { %>
+                    <div class="product-grid">
+                        <% products.forEach(product=> { %>
+                            <div class="product-item">
+                                <img src="<%= product.url_image %>" alt="<%= product.name %>" class="product-img"
+                                    onerror="this.src='https://via.placeholder.com/150'">
+                                <div class="product-info">
+                                    <h3>
+                                        <%= product.name %>
+                                    </h3>
+                                    <p class="price">$<%= product.price %>
+                                    </p>
+                                    <p class="id">ID: <%= product.id %>
+                                    </p>
+                                </div>
+                                <div class="product-actions">
+                                    <a href="/edit/<%= product.id %>" class="btn-edit">Edit</a>
+                                    <form action="/delete" method="POST" style="display:inline;">
+                                        <input type="hidden" name="id" value="<%= product.id %>">
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% }); %>
+                    </div>
+                    <% } else { %>
+                        <div class="empty-state">
+                            No products found. Add some!
+                        </div>
+                        <% } %>
+            </section>
+        </div>
+    </div>
+</body>
+
+</html>
