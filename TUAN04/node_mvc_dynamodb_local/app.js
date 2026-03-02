@@ -3,7 +3,7 @@ const path = require('path');
 const routes = require('./routes/index');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3000;
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,6 +19,6 @@ app.use('/', routes);
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`DynamoDB endpoint: http://localhost:8000`);
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`DynamoDB endpoint: ${process.env.DYNAMODB_ENDPOINT || 'AWS managed endpoint'}`);
 });
