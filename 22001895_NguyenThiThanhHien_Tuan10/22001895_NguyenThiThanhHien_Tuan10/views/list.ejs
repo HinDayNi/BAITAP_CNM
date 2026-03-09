@@ -1,124 +1,456 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DANH SÁCH SẢN PHẨM</title>
-</head>
-<style>
-        body{
-            font-family: Arial;
-            margin:40px;
+    <title>Hệ Thống Quản Lý Sản Phẩm - Amazon Web Services</title>
+    <!-- Nhúng Google Fonts cho phong cách hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
         }
 
-        table{
-            width:100%;
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+            background-image: radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        /* Thanh điều hướng */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Tìm kiếm */
+        .search-box {
+            display: flex;
+            flex-grow: 1;
+            max-width: 500px;
+            background: #fff;
+            padding: 5px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 10px 15px;
+            flex-grow: 1;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        /* Nút chung */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-add {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-search {
+            background: var(--dark);
+            color: white;
+            padding: 10px 20px;
+        }
+
+        /* Bảng dữ liệu */
+        .table-container {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
+            background: white;
         }
 
-        th,td{
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:center;
+        th {
+            background: #f8fafc;
+            padding: 16px;
+            text-align: left;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        th{
-            background:#f4f4f4;
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
         }
 
-        img{
-            width:80px;
+        tr:hover {
+            background-color: #f8fafc;
         }
 
-        .top{
-            display:flex;
-            justify-content:space-between;
-            margin-bottom:20px;
+        .product-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
         }
 
-        .btn{
-            padding:6px 12px;
-            text-decoration:none;
-            border-radius:4px;
-            color:white;
+        .product-img:hover {
+            transform: scale(1.5);
+            z-index: 10;
         }
 
-        .add{background:green;}
-        .edit{background:orange;}
-        .delete{background:red;}
-        .search{background:blue;}
+        .badge-qty {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .price-text {
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        /* Hành động */
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            border-radius: 8px;
+        }
+
+        .btn-edit {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Phân trang */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            gap: 8px;
+        }
+
+        .pagination a,
+        .pagination span {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .pagination a:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pagination .active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .pagination .disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Modal xác nhận xóa chuyên nghiệp */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .modal-btns button {
+            flex: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
     </style>
 </head>
 
 <body>
 
-<h2>Danh sách sản phẩm</h2>
+    <div class="container">
+        <h2>Quản lý kho hàng</h2>
 
-<div class="top">
+        <div class="top-bar">
+            <!-- Form Tìm kiếm -->
+            <form action="/search" method="GET" class="search-box">
+                <input type="text" name="keyword" placeholder="Tìm tên sản phẩm..." value="<%= keyword %>">
+                <button type="submit" class="btn btn-search">Tìm kiếm</button>
+            </form>
 
-    <!-- tìm kiếm -->
-    <form action="/search" method="GET">
-        <input type="text" name="keyword" placeholder="Nhập tên sản phẩm">
-        <button class="btn search">Tìm</button>
-    </form>
-
-    <!-- thêm -->
-    <a href="/add" class="btn add">Thêm sản phẩm</a>
-
-</div>
-
-<table>
-
-    <tr>
-        <th>ID</th>
-        <th>Tên</th>
-        <th>Ảnh</th>
-        <th>Giá</th>
-        <th>Số lượng</th>
-        <th>Hành động</th>
-    </tr>
-
-    <% if(products.length === 0){ %>
-        <tr>
-            <td colspan="6">Không có sản phẩm</td>
-        </tr>
-    <% } %>
-
-    <% products.forEach(product => { %>
-
-    <tr>
-        <td><%= product.ID %></td>
-
-        <td><%= product.name %></td>
-
-        <td>
-            <img src="<%= product.image || '/images/default-product.svg' %>">
-        </td>
-
-        <td><%= product.price %></td>
-
-        <td><%= product.quantity %></td>
-
-        <td>
-
-            <a href="/edit/<%= product.ID %>" class="btn edit">
-                Sửa
+            <!-- Nút Thêm -->
+            <a href="/add" class="btn btn-add">
+                <span>+</span> Thêm sản phẩm
             </a>
+        </div>
 
-            <a href="/delete/<%= product.ID %>"
-               class="btn delete"
-               onclick="return confirm('Bạn có chắc muốn xoá?')">
+        <!-- Bảng sản phẩm -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>ID</th>
+                        <th>Giá bán</th>
+                        <th>Số lượng</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(products.length===0) { %>
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <h3>Không tìm thấy sản phẩm nào</h3>
+                                    <p>Thử tìm kiếm với từ khóa khác hoặc thêm mới sản phẩm.</p>
+                                </div>
+                            </td>
+                        </tr>
+                        <% } else { %>
+                            <% products.forEach(p=> { %>
+                                <tr>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 15px;">
+                                            <% if(p.image) { %>
+                                                <img src="<%= p.image %>" class="product-img" alt="<%= p.name %>">
+                                                <% } else { %>
+                                                    <div class="product-img"
+                                                        style="display:flex; align-items:center; justify-content:center; background:#f1f5f9; color:#cbd5e1; font-size:10px;">
+                                                        No Image</div>
+                                                    <% } %>
+                                                        <div style="font-weight: 600;">
+                                                            <%= p.name %>
+                                                        </div>
+                                        </div>
+                                    </td>
+                                    <td><code
+                                            style="background:#f1f5f9; padding:4px 8px; border-radius:6px; font-size:0.8rem; color:#64748b;"><%= p.ID %></code>
+                                    </td>
+                                    <td><span class="price-text">$<%= p.price.toLocaleString() %></span></td>
+                                    <td><span class="badge-qty">
+                                            <%= p.quantity %> cái
+                                        </span></td>
+                                    <td>
+                                        <div class="actions">
+                                            <a href="/edit/<%= p.ID %>" class="btn btn-sm btn-edit">Sửa</a>
+                                            <button onclick="confirmDelete('<%= p.ID %>')"
+                                                class="btn btn-sm btn-delete">Xóa</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                                    <% } %>
+                </tbody>
+            </table>
+        </div>
 
-               Xóa
-            </a>
+        <!-- Phân trang chuyên nghiệp -->
+        <% if (totalPages> 1) { %>
+            <div class="pagination">
+                <a href="?page=<%= currentPage - 1 %><%= keyword ? '&keyword=' + keyword : '' %>"
+                    class="<%= currentPage === 1 ? 'disabled' : '' %>">‹</a>
 
-        </td>
+                <% for(let i=1; i <=totalPages; i++) { %>
+                    <a href="?page=<%= i %><%= keyword ? '&keyword=' + keyword : '' %>"
+                        class="<%= i === currentPage ? 'active' : '' %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
 
-    </tr>
+                        <a href="?page=<%= currentPage + 1 %><%= keyword ? '&keyword=' + keyword : '' %>"
+                            class="<%= currentPage === totalPages ? 'disabled' : '' %>">›</a>
+            </div>
+            <% } %>
+    </div>
 
-    <% }) %>
+    <!-- Modal xác nhận xóa -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h3>Xác nhận xóa?</h3>
+            <p>Hành động này không thể hoàn tác. Sản phẩm này sẽ bị xóa khỏi kho hàng.</p>
+            <div class="modal-btns">
+                <button onclick="closeModal()" class="btn" style="background:#f1f5f9; color:#475569;">Hủy bỏ</button>
+                <button id="confirmDeleteBtn" class="btn" style="background:var(--danger); color:white;">Đồng ý
+                    xóa</button>
+            </div>
+        </div>
+    </div>
 
-</table>
+    <script>
+        let deleteId = null;
+
+        function confirmDelete(id) {
+            deleteId = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        document.getElementById('confirmDeleteBtn').onclick = function () {
+            if (deleteId) {
+                window.location.href = `/delete/${deleteId}`;
+            }
+        }
+
+        // Đóng modal khi bấm ra ngoài
+        window.onclick = function (event) {
+            if (event.target == document.getElementById('deleteModal')) {
+                closeModal();
+            }
+        }
+    </script>
 
 </body>
+
 </html>

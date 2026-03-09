@@ -1,29 +1,16 @@
-const express = require("express")
-const router = express.Router()
-const multer = require("multer")
-const upload = multer({ storage: multer.memoryStorage() }) // Lưu file vào bộ nhớ tạm thời
+const express = require("express");
+const router = express.Router();
+const multer = require("multer");
+const ctrl = require("../controllers/productController");
 
-const productController = require("../controllers/productController")
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Hiển thị danh sách sản phẩm
-router.get("/", productController.getAllProducts)
+router.get("/", ctrl.list);
+router.get("/search", ctrl.find);
+router.get("/add", ctrl.edit); // Show form add
+router.post("/add", upload.single("image"), ctrl.add); // Save add
+router.get("/edit/:id", ctrl.showEdit);
+router.post("/edit/:id", upload.single("image"), ctrl.update);
+router.get("/delete/:id", ctrl.remove);
 
-// Hiển thị form thêm sản phẩm
-router.get("/add", productController.showAddProductForm)
-
-// Thêm sản phẩm
-router.post("/add", upload.single("image"), productController.addProduct)
-
-// Hiển thị form sửa sản phẩm
-router.get("/edit/:id", productController.showEditProductForm)
-
-// Cập nhật sản phẩm
-router.post("/edit/:id", upload.single("image"), productController.updateProduct)
-
-// Xóa sản phẩm
-router.get("/delete/:id", productController.deleteProduct)
-
-// Tìm kiếm sản phẩm
-router.get("/search", productController.searchProducts)
-
-module.exports = router
+module.exports = router;

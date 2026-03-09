@@ -1,94 +1,45 @@
-const {dynamoDB} = require("../config/aws")
-const {ScanCommand, PutCommand, DeleteCommand, GetCommand, UpdateCommand} = require("@aws-sdk/lib-dynamodb")
+const { dynamoDB, TABLE_NAME } = require("../config/aws");
+const { ScanCommand, PutCommand, DeleteCommand, GetCommand, UpdateCommand } = require("@aws-sdk/lib-dynamodb");
 
-const TABLE_NAME = "Products"
-
-// Lấy toàn bộ sản phẩm
-async function getAllProduct (){
-    const command = new ScanCommand({
-        TableName: TABLE_NAME
-    })
-
-    return (await dynamoDB.send(command)).Items
+// 1. Lấy tất cả
+async function getAllProduct() {
+    const res = await dynamoDB.send(new ScanCommand({ TableName: TABLE_NAME }));
+    return res.Items || [];
 }
 
-//  Lấy 1 sản phẩm theo ID
-async function getProductById (id){
-    const command = new GetCommand({
+// 2. Lấy theo ID
+async function getProductById(id) {
+    const res = await dynamoDB.send(new GetCommand({ TableName: TABLE_NAME, Key: { ID: id } }));
+    return res.Item;
+}
+
+// 3. Thêm mới
+async function addProduct(product) {
+    return await dynamoDB.send(new PutCommand({ TableName: TABLE_NAME, Item: product }));
+}
+
+// 4. Cập nhật
+async function updateProduct(id, p) {
+    return await dynamoDB.send(new UpdateCommand({
         TableName: TABLE_NAME,
-        Key: {
-            ID: id
-        }
-    })
-
-    return (await dynamoDB.send(command)).Item
+        Key: { ID: id },
+        UpdateExpression: "SET #n=:n, price=:p, quantity=:q, image=:i",
+        ExpressionAttributeNames: { "#n": "name" },
+        ExpressionAttributeValues: { ":n": p.name, ":p": Number(p.price), ":q": Number(p.quantity), ":i": p.image }
+    }));
 }
 
-// Thêm sản phẩm
-async function addProduct (product){
-    const command = new PutCommand({
-        TableName: TABLE_NAME,
-        Item: product
-    })
-
-    return await dynamoDB.send(command)
+// 5. Xóa
+async function deleteProduct(id) {
+    return await dynamoDB.send(new DeleteCommand({ TableName: TABLE_NAME, Key: { ID: id } }));
 }
 
-// Cập nhật sản phẩm
-async function updateProduct(id, product){
-    const command = new UpdateCommand({
-        TableName: TABLE_NAME,
-        Key: {
-            ID: id
-        },
-        UpdateExpression: "SET #name = :name, price = :price, quantity = :quantity, image = :image",
-        ExpressionAttributeNames: {
-            "#name": "name",
-        },
-        ExpressionAttributeValues: {
-            ":name": product.name,
-            ":price": product.price,
-            ":quantity": product.quantity,
-            ":image": product.image
-        }
-    })
-
-    return await dynamoDB.send(command)
+// 6. TÌM KIẾM (Cách ngắn nhất: dễ nhớ, dễ đi thi)
+async function searchProduct(keyword) {
+    const all = await getAllProduct();
+    if (!keyword) return all;
+    // Chỉ cần chuyển về chữ thường rồi dùng includes là xong
+    return all.filter(p => p.name.toLowerCase().includes(keyword.toLowerCase()));
 }
 
-// Xóa sản phẩm
-async function deleteProduct(id){
-    const command = new DeleteCommand({
-        TableName: TABLE_NAME,
-        Key: {
-            ID: id
-        }
-    })
-
-    return await dynamoDB.send(command)
-}
-
-// Tìm kiếm sản phẩm theo tên
-async function searchProduct(keyword){
-    const command = new ScanCommand({
-        TableName: TABLE_NAME,
-        FilterExpression: "contains(#name, :keyword)",
-        ExpressionAttributeNames: {
-            "#name": "name"
-        },
-        ExpressionAttributeValues: {
-            ":keyword": keyword
-        }
-    })
-    return (await dynamoDB.send(command)).Items
-}
-
-module.exports = {
-    getAllProduct,
-    getProductById,
-    addProduct,
-    updateProduct,
-    deleteProduct,
-    searchProduct
-}
-
+module.exports = { getAllProduct, getProductById, addProduct, updateProduct, deleteProduct, searchProduct };
