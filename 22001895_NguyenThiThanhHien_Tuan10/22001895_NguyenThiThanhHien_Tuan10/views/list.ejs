@@ -92,9 +92,7 @@
         <td><%= product.name %></td>
 
         <td>
-            <% if(product.image){ %>
-                <img src="<%= product.image %>">
-            <% } %>
+            <img src="<%= product.image || '/images/default-product.svg' %>">
         </td>
 
         <td><%= product.price %></td>

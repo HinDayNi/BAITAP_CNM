@@ -63,9 +63,7 @@ a{
 
 <label>Ảnh hiện tại</label>
 <br>
-<% if(product.image){ %>
-<img src="<%= product.image %>">
-<% } %>
+<img src="<%= product.image || '/images/default-product.svg' %>">
 
 <label>Chọn ảnh mới (nếu muốn thay)</label>
 <input type="file" name="image" accept="image/*">
