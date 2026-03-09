@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANH SÁCH SẢN PHẨM</title>
+</head>
+<style>
+        body{
+            font-family: Arial;
+            margin:40px;
+        }
+
+        table{
+            width:100%;
+            border-collapse: collapse;
+        }
+
+        th,td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#f4f4f4;
+        }
+
+        img{
+            width:80px;
+        }
+
+        .top{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:20px;
+        }
+
+        .btn{
+            padding:6px 12px;
+            text-decoration:none;
+            border-radius:4px;
+            color:white;
+        }
+
+        .add{background:green;}
+        .edit{background:orange;}
+        .delete{background:red;}
+        .search{background:blue;}
+    </style>
+</head>
+
+<body>
+
+<h2>Danh sách sản phẩm</h2>
+
+<div class="top">
+
+    <!-- tìm kiếm -->
+    <form action="/search" method="GET">
+        <input type="text" name="keyword" placeholder="Nhập tên sản phẩm">
+        <button class="btn search">Tìm</button>
+    </form>
+
+    <!-- thêm -->
+    <a href="/add" class="btn add">Thêm sản phẩm</a>
+
+</div>
+
+<table>
+
+    <tr>
+        <th>ID</th>
+        <th>Tên</th>
+        <th>Ảnh</th>
+        <th>Giá</th>
+        <th>Số lượng</th>
+        <th>Hành động</th>
+    </tr>
+
+    <% if(products.length === 0){ %>
+        <tr>
+            <td colspan="6">Không có sản phẩm</td>
+        </tr>
+    <% } %>
+
+    <% products.forEach(product => { %>
+
+    <tr>
+        <td><%= product.ID %></td>
+
+        <td><%= product.name %></td>
+
+        <td>
+            <% if(product.image){ %>
+                <img src="<%= product.image %>">
+            <% } %>
+        </td>
+
+        <td><%= product.price %></td>
+
+        <td><%= product.quantity %></td>
+
+        <td>
+
+            <a href="/edit/<%= product.ID %>" class="btn edit">
+                Sửa
+            </a>
+
+            <a href="/delete/<%= product.ID %>"
+               class="btn delete"
+               onclick="return confirm('Bạn có chắc muốn xoá?')">
+
+               Xóa
+            </a>
+
+        </td>
+
+    </tr>
+
+    <% }) %>
+
+</table>
+
+</body>
+</html>
