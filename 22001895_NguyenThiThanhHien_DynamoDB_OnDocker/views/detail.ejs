@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+    <h1>Chi tiết sản phẩm</h1>
+    <p>ID:
+        <%= product.id %>
+    </p>
+    <p>Tên:
+        <%= product.name %>
+    </p>
+    <p>Giá:
+        <%= product.price %>
+    </p>
+    <p>Tồn kho:
+        <%= product.unit_in_stock %>
+    </p>
+    <p>
+        Hình ảnh:
+        <% if (product.url_image) { %>
+            <img src="<%= product.url_image %>" width="140" />
+            <% } else { %>
+                Không có hình
+                <% } %>
+    </p>
+    <a href="/">Quay lại danh sách</a>
+</body>
+
+</html>

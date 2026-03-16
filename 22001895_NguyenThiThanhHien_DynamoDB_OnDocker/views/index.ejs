@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách sản phẩm</title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+</head>
+
+<body>
+    <h1>Quản lý sản phẩm</h1>
+
+    <% if (msg) { %>
+        <p class="msg">
+            <%= msg %>
+        </p>
+        <% } %>
+            <% if (err) { %>
+                <p class="err">
+                    <%= err %>
+                </p>
+                <% } %>
+
+                    <form method="GET" action="/" class="search">
+                        <input name="q" value="<%= q %>" placeholder="Tìm theo tên..." />
+                        <button type="submit">Tìm</button>
+                        <a href="/">Reset</a>
+                    </form>
+
+                    <p><a href="/new">+ Thêm sản phẩm</a></p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Hình ảnh</th>
+                                <th>Tên</th>
+                                <th>Giá</th>
+                                <th>Tồn kho</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (!products.length) { %>
+                                <tr>
+                                    <td colspan="5">Chưa có dữ liệu</td>
+                                </tr>
+                                <% } %>
+                                    <% products.forEach(p => { %>
+                                        <tr>
+                                            <td>
+                                                <% if (p.url_image) { %>
+                                                    <img src="<%= p.url_image %>" width="70" />
+                                                    <% } else { %>
+                                                        Khong co
+                                                        <% } %>
+                                            </td>
+                                            <td>
+                                                <%= p.name %>
+                                            </td>
+                                            <td>
+                                                <%= p.price %>
+                                            </td>
+                                            <td>
+                                                <%= p.unit_in_stock %>
+                                            </td>
+                                            <td>
+                                                <a href="/<%= p.id %>">Chi tiết</a>
+                                                <a href="/<%= p.id %>/edit">Sửa</a>
+                                                <form action="/<%= p.id %>/delete" method="POST" style="display:inline;">
+                                                    <button onclick="return confirm('Xóa sản phẩm này?')">Xóa</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                        </tbody>
+                    </table>
+</body>
+
+</html>
