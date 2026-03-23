@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chỉnh sửa vé</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <h1>Chỉnh sửa vé</h1>
+    <form action="/tickets/<%= ticket.ticketId %>/update" method="POST" enctype="multipart/form-data">
+        <div>
+            <label>Mã vé:</label>
+            <input type="text" value="<%= ticket.ticketId %>" disabled>
+        </div>
+        <div>
+            <label>Tên sự kiện:</label>
+            <input type="text" name="eventName" value="<%= ticket.eventName %>" required>
+        </div>
+        <div>
+            <label>Giá vé:</label>
+            <input type="number" name="price" value="<%= ticket.price %>" required step="0.01">
+        </div>
+        <div>
+            <label>Số lượng:</label>
+            <input type="number" name="quantity" value="<%= ticket.quantity %>" required>
+        </div>
+        <div>
+            <label>Hình ảnh:</label>
+            <% if (ticket.imageUrl) { %>
+                <div>
+                    <img src="<%= ticket.imageUrl %>" alt="Current image" style="max-width: 200px;">
+                    <p>Hình ảnh hiện tại</p>
+                </div>
+                <% } %>
+                    <input type="file" name="image" accept="image/*">
+        </div>
+        <button type="submit">Cập nhật</button>
+        <a href="/tickets">Hủy</a>
+    </form>
+</body>
+
+</html>

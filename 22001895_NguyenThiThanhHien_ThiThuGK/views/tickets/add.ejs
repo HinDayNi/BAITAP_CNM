@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Thêm vé</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <h1>Thêm vé mới</h1>
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div style="color: red; margin: 10px 0;">
+            <%= error %>
+        </div>
+        <% } %>
+            <form action="/tickets/add" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label>Mã vé:</label>
+                    <input type="text" name="ticketId" required>
+                </div>
+                <div>
+                    <label>Tên sự kiện:</label>
+                    <input type="text" name="eventName" required>
+                </div>
+                <div>
+                    <label>Giá vé:</label>
+                    <input type="number" name="price" required step="0.01">
+                </div>
+                <div>
+                    <label>Số lượng:</label>
+                    <input type="number" name="quantity" required>
+                </div>
+                <div>
+                    <label>Hình ảnh:</label>
+                    <input type="file" name="image" accept="image/*">
+                </div>
+                <button type="submit">Thêm vé</button>
+                <a href="/tickets">Hủy</a>
+            </form>
+</body>
+
+</html>

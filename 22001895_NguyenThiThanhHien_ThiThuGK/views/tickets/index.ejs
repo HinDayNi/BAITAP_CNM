@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Danh sách vé</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <h1>Danh sách vé</h1>
+    <a href="/tickets/add">Thêm vé mới</a>
+
+    <% if (!tickets || tickets.length === 0) { %>
+        <p>Không có vé nào</p>
+        <% } else { %>
+            <table border="1">
+                <tr>
+                    <th>Mã vé</th>
+                    <th>Sự kiện</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Ảnh</th>
+                    <th>Hành động</th>
+                </tr>
+                <% tickets.forEach(ticket => { %>
+                    <tr>
+                        <td>
+                            <%= ticket.ticketId %>
+                        </td>
+                        <td>
+                            <%= ticket.eventName %>
+                        </td>
+                        <td>
+                            <%= ticket.price %>
+                        </td>
+                        <td>
+                            <%= ticket.quantity %>
+                        </td>
+                        <td>
+                            <% if (ticket.imageUrl) { %>
+                                <img src="<%= ticket.imageUrl %>" width="80">
+                                <% } %>
+                        </td>
+                        <td>
+                            <a href="/tickets/<%= ticket.ticketId %>/edit">Sửa</a>
+                            <form action="/tickets/<%= ticket.ticketId %>/delete" method="POST" style="display:inline;">
+                                <button type="submit" onclick="return confirm('Xóa vé này?')">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </table>
+            <% } %>
+</body>
+
+</html>
